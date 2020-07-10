@@ -1,0 +1,60 @@
+/* 
+  Localizable.strings
+  ScheduleMIPT
+
+  Created by Admin on 04.05.2020.
+  Copyright © 2020 Admin. All rights reserved.
+*/
+
+"CFBundleDisplayName" = "Физтех.Расписание";
+ 
+// Days of week
+"Monday_Label" = "Понедельник";
+"Tuesday_Label" = "Вторник";
+"Wednesday_Label" = "Среда";
+"Thursday_Label" = "Четверг";
+"Friday_Label" = "Пятница";
+"Saturday_Label" = "Суббота";
+"Sunday_Label" = "Воскресенье";
+
+// Types of lesson
+"LEC" = "Лекция";
+"SEM" = "Семинар";
+"LAB" = "Лаборатория";
+"BOT" = "Время бота";
+"RST" = "Отдых";
+
+// Confirm dialog
+"dialog_title" = "Подтверждение";
+"dialog_message" = "Вы уверены, что хотите удалить это занятие?";
+"dialog_ok_button" = "ОК";
+"dialog_cancel_button" = "Отмена";
+
+// Picker view
+"done_button" = "Готово";
+
+// Edit view
+"editing_text" = "Редактировать";
+"creating_text" = "Создать";
+"lesson_information_header" = "Основная информация";
+"lesson_text" = "Предмет";
+"place_text" = "Аудитория";
+"prof_text" = "Преподаватель";
+"date_time_header" = "Дата и время";
+"day_text" = "День";
+"start_time_text" = "Начало";
+"end_time_text" = "Конец";
+"extra_header" = "Дополнительно";
+"type_text" = "Тип занятия";
+"notes_text" = "Заметки";
+
+"save_button_text" = "Сохранить";
+"delete_button_text" = "Удалить";
+
+// Search view
+"search_title" = "Поиск";
+"search_hint" = "Номер группы";
+
+// Start view
+"welcome_text" = "Добро пожаловать! \nНажмите продолжить, чтобы выбрать свою группу";
+"welcome_button_text" = "Продолжить";
