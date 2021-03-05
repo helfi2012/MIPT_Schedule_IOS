@@ -1,0 +1,117 @@
+/* 
+  Localizable.strings
+  ScheduleMIPT
+
+  Created by Admin on 04.05.2020.
+  Copyright © 2020 Admin. All rights reserved.
+*/
+
+// Days of week
+"Monday_Label" = "Monday";
+"Tuesday_Label" = "Tuesday";
+"Wednesday_Label" = "Wednesday";
+"Thursday_Label" = "Thursday";
+"Friday_Label" = "Friday";
+"Saturday_Label" = "Saturday";
+"Sunday_Label" = "Sunday";
+
+// Types of lesson
+"LEC" = "Lecture";
+"SEM" = "Seminar";
+"LAB" = "Laboratory";
+"BOT" = "Botay";
+"RST" = "Rest";
+
+// Confirm dialog
+"dialog_title" = "Confirm";
+"dialog_message" = "Are you sure you want to delete this lesson?";
+"dialog_ok_button" = "OK";
+"dialog_cancel_button" = "Cancel";
+
+// Picker view
+"done_button" = "Done";
+
+// Edit view
+"editing_text" = "Edit";
+"creating_text" = "Create";
+"lesson_information_header" = "Lesson information";
+"lesson_text" = "Lesson";
+"place_text" = "Place";
+"prof_text" = "Professor";
+"date_time_header" = "Day and time";
+"day_text" = "Day";
+"start_time_text" = "Start time";
+"end_time_text" = "End time";
+"extra_header" = "Extra";
+"type_text" = "Type";
+"notes_text" = "Notes";
+
+"save_button_text" = "Save";
+"delete_button_text" = "Delete";
+
+// Search view
+"search_title" = "Select group";
+"search_hint" = "Enter group number";
+"search_recent" = "Recent";
+"search_empty" = "Nothing found";
+"search_newgroup" = "Create new group";
+
+// Onboarding view
+"onboarding_title" = "MIPT.Schedule";
+"onboarding_search_title" = "Selecting a group";
+"onboarding_search_description" = "Choose any MIPT study group or create your own.";
+"onboarding_edit_title" = "Editing";
+"onboarding_edit_description" = "Customize your schedule by adding and editing classes.";
+"onboarding_notification_title" = "Notifications";
+"onboarding_notification_description" = "You can enable notifications in the settings. They will remind you about the upcoming classes in time.";
+"onboarding_widget_title" = "Widget";
+"onboarding_widget_description" = "Add a widget to the home screen to always have a schedule at hand.";
+"onboarding_button" = "Continue";
+
+// Tab View
+"schedule_tab" = "Schedule";
+"settings_tab" = "Settings";
+
+// SettingsView
+"settings_title" = "Settings";
+"settings_general" = "GENERAL";
+"settings_group" = "Group number";
+"settings_breaks" = "Show breaks";
+"settings_reset_button" = "Reset schedule";
+"settings_reset_description" = "This action will delete all changes in the schedule. It cannot be undone.";
+"settings_reset_dialog" = "Are you sure you want to remove all changes?";
+"settings_notifications" = "NOTIFICATIONS";
+"settings_notifications_enabled" = "Enabled";
+"settings_notifications_permission_title" = "Permission denied";
+"settings_notifications_permission_description" = "Notification permission was not authorized. Please enable it in the Settings to continue.";
+"settings_notifications_permission_ok_button" = "Go to Settings";
+"settings_notifications_time" = "Notify in";
+"settings_notifications_description" = "Notifications will help you not forget about your classes.";
+"settings_communication" = "COMMUNICATION";
+"settings_share" = "Share this app";
+"settings_share_text" = "Check it out, I use MIPT.Schedule";
+"settings_developer" = "Write to the developer";
+"settings_rate" = "Rate this app";
+"settings_about" = "ABOUT";
+"settings_version" = "Version";
+"settings_thanks" = "The developer is grateful to the Endowment Fund for supporting the project.";
+
+"settings_1minute" = "1 minute";
+"settings_5minute" = "5 minutes";
+"settings_10minute" = "10 minutes";
+
+"break_extra_short" = "Break is just %d minutes :(";
+"break_short" = "%d minute break - a cup of tea?";
+"break_medium" = "%d minutes are enough to eat";
+"break_long" = "%d-minute break. Finally, some sleep!";
+
+"no_lessons_text" = "No lessons today! Chill out...";
+
+"newgroup_bartitle" = "New group";
+"newgroup_button" = "Create";
+"newgroup_placeholder" = "Enter group name";
+"newgroup_description" = "Please enter your custom group name. It cannot be changed in the future. You will be able to create your own schedule.";
+
+
+"widget_display_name" = "Reminder";
+"widget_description" = "Shows upcoming classes";

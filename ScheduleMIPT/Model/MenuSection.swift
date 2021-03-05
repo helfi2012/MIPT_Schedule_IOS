@@ -8,8 +8,15 @@
 
 import SwiftUI
 
+/**
+ `MenuSection` represents one day in the week.
+ */
+
 class MenuSection: Codable, Identifiable {
+    // name == day of the week (e.g. 'Monday')
     var name: String
+    
+    // Lessons within this day
     var items = [ScheduleItem]()
     
     init(name: String) {

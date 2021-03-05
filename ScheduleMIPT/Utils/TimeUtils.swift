@@ -10,6 +10,9 @@ import UIKit
 
 class TimeUtils {
     
+    /**
+        - Returns `true` if `t1` is less than `t2`
+     */
     static func compareTime(t1: String, t2: String) -> Bool {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -21,7 +24,7 @@ class TimeUtils {
     }
 
     /**
-    * @return distance between t1 and t2 in hours
+        - Returns distance in hours between t1 and t2 in hours
     */
     static func timeDistance(t1: String, t2: String) -> Double {
         let dateFormatter: DateFormatter = DateFormatter()
@@ -33,8 +36,9 @@ class TimeUtils {
         }
     }
 
+    
     /**
-     * @return day number from Monday - 1 to Sunday - 7
+        - Returns day number from Monday == 1 to Sunday == 7
      */
     static func getCurrentDay() -> Int {
         let currentDay = Date().dayNumberOfWeek()! - 2
@@ -42,6 +46,27 @@ class TimeUtils {
             return currentDay + 1
         } else {
             return 7
+        }
+    }
+    
+    static func getDayComponents(time: String, day: Int) -> DateComponents {
+        let split = time.split(separator: ":")
+        let hour = Int(split[0])!
+        let minute = Int(split[1])!
+        
+        var comp = DateComponents()
+        comp.weekday = myDayToIOSDay(weekday: day)
+        comp.hour = hour
+        comp.minute = minute
+        
+        return comp
+    }
+    
+    static func myDayToIOSDay(weekday: Int) -> Int {
+        if (weekday <= 6) {
+            return weekday + 1
+        } else {
+            return 1
         }
     }
 }

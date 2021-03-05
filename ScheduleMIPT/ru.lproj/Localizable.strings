@@ -5,8 +5,6 @@
   Created by Admin on 04.05.2020.
   Copyright © 2020 Admin. All rights reserved.
 */
-
-"CFBundleDisplayName" = "Физтех.Расписание";
  
 // Days of week
 "Monday_Label" = "Понедельник";
@@ -52,9 +50,67 @@
 "delete_button_text" = "Удалить";
 
 // Search view
-"search_title" = "Поиск";
-"search_hint" = "Номер группы";
+"search_title" = "Выбор группы";
+"search_hint" = "Введите номер группы";
+"search_recent" = "Недавние";
+"search_empty" = "Ничего не найдено";
+"search_newgroup" = "Создать свою группу";
 
-// Start view
-"welcome_text" = "Добро пожаловать! \nНажмите продолжить, чтобы выбрать свою группу";
-"welcome_button_text" = "Продолжить";
+// Onboarding view
+"onboarding_title" = "Физтех.Расписание";
+"onboarding_search_title" = "Выбор группы";
+"onboarding_search_description" = "Выбери любую учебную группу МФТИ или создай свою.";
+"onboarding_edit_title" = "Редактирование";
+"onboarding_edit_description" = "Настрой расписание под себя, добавляя и редактируя занятия.";
+"onboarding_notification_title" = "Уведомления";
+"onboarding_notification_description" = "В настройках можно включить уведомления. Они вовремя напомнят о предстоящих занятиях.";
+"onboarding_widget_title" = "Виджет";
+"onboarding_widget_description" = "Добавь виджет на главный экран, чтобы всегда иметь расписание под рукой.";
+"onboarding_button" = "Продолжить";
+
+// Tab View
+"schedule_tab" = "Расписание";
+"settings_tab" = "Настройки";
+
+// SettingsView
+"settings_title" = "Настройки";
+"settings_general" = "Основные";
+"settings_group" = "Номер группы";
+"settings_breaks" = "Показывать перерывы";
+"settings_reset_button" = "Сбросить изменения";
+"settings_reset_description" = "Это действие приведет к удалению всех изменений, внесенных в расписание.";
+"settings_reset_dialog" = "Вы действительно хотите удалить все изменения?";
+"settings_notifications" = "Уведомления";
+"settings_notifications_enabled" = "Отправлять уведомления";
+"settings_notifications_permission_title" = "Отсутствует разрешение";
+"settings_notifications_permission_description" = "Разрешение на уведомления не было получено. Пожалуйста, разрешить приложению показывать уведомления в Настройках.";
+"settings_notifications_permission_ok_button" = "Перейти в настройки";
+"settings_notifications_time" = "Предупреждать за ";
+"settings_notifications_description" = "Уведомления помогут вам не забывать про занятия.";
+"settings_communication" = "Обратная связь";
+"settings_share" = "Рассказать друзьям";
+"settings_share_text" = "Зацени, я использую Физтех.Расписание";
+"settings_developer" = "Написать разработчику";
+"settings_rate" = "Оценить приложение";
+"settings_about" = "Дополнительно";
+"settings_version" = "Версия";
+"settings_thanks" = "Разработчик благодарен Фонду Целевого Капитала МФТИ за поддержку проекта.";
+
+"settings_1minute" = "1 минуту";
+"settings_5minute" = "5 минут";
+"settings_10minute" = "10 минут";
+
+"break_extra_short" = "Перерыв всего %d минут";
+"break_short" = "Перерыв %d минут - чашечку кофе?";
+"break_medium" = "Перерыв %d минут - время поесть";
+"break_long" = "Перерыв %d минут. Можно поспать!";
+
+"no_lessons_text" = "Нет занятий!";
+
+"newgroup_bartitle" = "Новая группа";
+"newgroup_button" = "Создать";
+"newgroup_placeholder" = "Введите название группы";
+"newgroup_description" = "Пожалуйста, введите название вашей уникальной группы. Расписание предметов вы сможете заполнить самостоятельно.";
+
+"widget_display_name" = "Расписание";
+"widget_description" = "Показывает ближайшие занятия";

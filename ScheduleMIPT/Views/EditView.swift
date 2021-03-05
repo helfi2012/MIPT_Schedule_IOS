@@ -8,21 +8,33 @@
 
 import SwiftUI
 
+
+/**
+ `EditView` allows the user to change information about the lesson or create new lesson
+ */
 struct EditView: View {
     @EnvironmentObject var schedule: Schedule
     
+    // User's group name
     var groupNumber: String
+    
+    // `false` means editing mode, `true` means creating mode
     var isCreatingMode = false
+    
+    // Item to edit if not nil
     var item: ScheduleItem! = nil
     
+    // Array containing localized names of days of the week
     private let weekLabels = StringUtils.getWeekLabels()
+    
+    // Array containing localized names of lesson types
     private let typeLabels = StringUtils.getTypeLabels()
     
     @State private var lessonText: String = ""
     @State private var placeText: String = ""
     @State private var profText: String = ""
     
-    @State private var selectedTypeIndex: Int = 0
+    @State private var selectedType: String = "SEM"
     @State private var selectedDayIndex: Int = 0
     
     @State private var startTime = Date()
@@ -32,21 +44,45 @@ struct EditView: View {
     
     @State private var showingAlert = false
     
+    @State private var pickerVisible = false
+    
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var body: some View {
         Form {
+            // General section
             Section(header: Text("lesson_information_header")) {
                 TextField("lesson_text", text: $lessonText)
                 TextField("place_text", text: $placeText)
                 TextField("prof_text", text: $profText)
             }
+            
+            // Time & date section
             Section(header: Text("date_time_header")) {
             
-                Picker("day_text", selection: $selectedDayIndex) {
-                    ForEach(0..<weekLabels.count) {
-                        Text(self.weekLabels[$0])
+                HStack {
+                    Text("day_text")
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        self.pickerVisible.toggle()
+                    }) {
+                        Text(self.weekLabels[selectedDayIndex])
+                            .foregroundColor(Color(UIColor.systemGray))
                     }
+                }
+                if pickerVisible {
+                    Picker("day_text", selection: $selectedDayIndex) {
+                        ForEach(0..<weekLabels.count, id: \.self) { i in
+                            Text(self.weekLabels[i])
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(maxHeight: 150)
+                    .onTapGesture(perform: {
+                        self.pickerVisible.toggle()
+                    })
                 }
                 
                 DatePicker(selection: $startTime, in: ...Date(), displayedComponents: .hourAndMinute) {
@@ -55,16 +91,27 @@ struct EditView: View {
                 
                 DatePicker(selection: $endTime, in: ...Date(), displayedComponents: .hourAndMinute) {
                     Text("end_time_text")
-                }
-            }
-            Section(header: Text("extra_header")) {
-                Picker("type_text", selection: $selectedTypeIndex) {
-                    ForEach(0..<typeLabels.count) {
-                        Text(self.typeLabels[$0])
+                }.onChange(of: endTime, perform: { value in
+                    if (startTime.distance(to: endTime) < 0) {
+                        endTime = Calendar.current.date(byAdding: .minute, value: 1, to: startTime)!
                     }
-                }
-                TextField("notes_text", text: $notesText)
+                })
             }
+            
+            // Extra section
+            Section(header: Text("extra_header")) {
+                
+                HStack {
+                    Spacer()
+                    ColorSwatchView(selection: $selectedType)
+                    Spacer()
+                }
+                
+                TextField("notes_text", text: $notesText)
+                
+            }
+            
+            // Delete section
             Section() {
                 Button(action: {
                     self.showingAlert = true
@@ -74,12 +121,10 @@ struct EditView: View {
             }
         }.onAppear {
             if (self.isCreatingMode) {
-                
+                self.prepareCreatingMode()
             } else {
                 self.bindInitialData()
             }
-        }.onDisappear {
-            print("ContentView disappeared!")
         }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("dialog_title"),
@@ -104,12 +149,31 @@ struct EditView: View {
                     self.mode.wrappedValue.dismiss()
                 }) {
                     Text("save_button_text")
-                }
+                }.disabled(lessonText.isEmpty)
             })
+
     }
     
     // MARK: Data work
     
+    /**
+        Setting default values to pickers for the first launch
+     */
+    private func prepareCreatingMode() {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        
+        self.startTime = dateFormatter.date(from: "10:45")!
+        self.endTime = dateFormatter.date(from: "12:10")!
+        
+//        if self.selectedDayIndex == -1 {
+//            self.selectedDayIndex = 0
+//        }
+        self.selectedDayIndex = 0
+    }
+    /**
+        Loading initial information to the views from ItemView (Editing mode)
+     */
     private func bindInitialData() {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -117,12 +181,18 @@ struct EditView: View {
         self.placeText = self.item.place
         self.profText = self.item.prof
         self.notesText = self.item.notes
-        self.selectedTypeIndex = StringUtils.TYPE_KEYS.firstIndex(of: self.item.type)!
+        self.selectedType = self.item.type
+//        if self.selectedDayIndex == -1 {
+//            self.selectedDayIndex = self.item.day - 1
+//        }
         self.selectedDayIndex = self.item.day - 1
         self.startTime = dateFormatter.date(from: self.item.startTime)!
         self.endTime = dateFormatter.date(from: self.item.endTime)!
     }
     
+    /**
+        Deleting current lesson and updating the schedule
+     */
     private func deleteItem() {
         let app = UIApplication.shared.delegate as! AppDelegate
         let schedule = app.schedule!
@@ -132,6 +202,9 @@ struct EditView: View {
         app.updateTimeTable(updatedSchedule: schedule)
     }
     
+    /**
+        Creating new ScheduleItem from user's input
+     */
     private func newItem() -> ScheduleItem {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
@@ -139,12 +212,15 @@ struct EditView: View {
                                 prof: self.profText,
                                 place: self.placeText,
                                 day: self.selectedDayIndex + 1,
-                                type: StringUtils.TYPE_KEYS[self.selectedTypeIndex],
+                                type: self.selectedType,
                                 startTime: dateFormatter.string(from: self.startTime),
                                 endTime: dateFormatter.string(from: self.endTime),
                                 notes: self.notesText)
     }
     
+    /**
+        Creating new lesson and updating the schedule (Creating mode)
+     */
     private func saveNewData() {
         let newItem = self.newItem()
         var lessons = schedule.timetable[groupNumber]!
@@ -161,6 +237,9 @@ struct EditView: View {
         app.updateTimeTable(updatedSchedule: schedule)
     }
     
+    /**
+        Saving changes in the existing lesson (Editing mode)
+     */
     private func overwriteData() {
         let newItem = self.newItem()
         var lessons = schedule.timetable[groupNumber]!
