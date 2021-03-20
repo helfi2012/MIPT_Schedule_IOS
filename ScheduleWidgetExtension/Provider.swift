@@ -121,7 +121,7 @@ struct Provider: TimelineProvider {
         dateFormatter.dateFormat = "HH:mm"
         let currentTime = dateFormatter.string(from: date)
         for i in 0..<lessonsToday.count {
-            if TimeUtils.timeDistance(t1: lessonsToday[i].endTime, t2: currentTime) < 0 {
+            if TimeUtils.timeDistance(t1: lessonsToday[i].endTime, t2: currentTime) + 5.0 / 60.0 < 0 {
                 return Array(lessonsToday[i..<(min(i + Constants.WIDGET_MAX_ITEMS, lessonsToday.count))])
             }
         }

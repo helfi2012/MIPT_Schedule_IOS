@@ -51,11 +51,13 @@ class NotificationUtils {
                 for item in items {
                     // Set up body of the notification
                     let content = UNMutableNotificationContent()
+                    content.title = item.name
                     if item.place.isEmpty {
-                        content.title = item.name + " (" + item.startTime + ")"
+                        content.title = item.name
+                        content.body = "\(NSLocalizedString("notification_text_at", comment: "At")) \(item.startTime)"
                     } else {
                         content.title = item.name
-                        content.body = "В " + item.startTime + " в " + item.place
+                        content.body = "\(NSLocalizedString("notification_text_at", comment: "At")) \(item.startTime) \(NSLocalizedString("notification_text_in", comment: "in")) \(item.place)"
                     }
                     
                     content.categoryIdentifier = "alarm"
@@ -83,23 +85,7 @@ class NotificationUtils {
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
                     center.add(request)
                 }
-                print("     Notifications have been set; minutesBefore=" + String(minutesBefore))
-                
             }
         }
-    }
-    
-    static func stupidNotifiction() {
-        let center = UNUserNotificationCenter.current()
-        let content = UNMutableNotificationContent()
-        content.body = "Математический анализ (12:20)"
-        // content.body = "Через 10 минут в 114 ГК"
-        content.categoryIdentifier = "alarm"
-        content.sound = UNNotificationSound.default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        center.add(request)
     }
 }

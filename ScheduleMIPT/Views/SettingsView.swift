@@ -124,29 +124,29 @@ struct SettingsView: View {
                 Section(header: Text("settings_communication")) {
                     
                     // Share button
-                    Button(action: {
-                        showShareSheet = true
-                    }) {
-                        Text("settings_share")
-                    }
+//                    Button(action: {
+//                        showShareSheet = true
+//                    }) {
+//                        Text("settings_share")
+//                    }
                     
                     // Write to developer button
                     Button(action: {
-                        if let url = URL(string: "https://vk.com/yasha_kayumov") {
-                               UIApplication.shared.open(url)
+                        if let url = URL(string: Constants.DEVELOPER_LINK) {
+                            UIApplication.shared.open(url)
                         }
                     }) {
                         Text("settings_developer")
                     }
                     
                     // Rate button
-                    Button(action: {
-                        if let url = URL(string: "https://www.apple.com") {
-                               UIApplication.shared.open(url)
-                        }
-                    }) {
-                        Text("settings_rate")
-                    }
+//                    Button(action: {
+//                        if let url = URL(string: Constants.RATE_LINK) {
+//                            UIApplication.shared.open(url)
+//                        }
+//                    }) {
+//                        Text("settings_rate")
+//                    }
                 }
                 
                 // About section
@@ -162,16 +162,23 @@ struct SettingsView: View {
                     }
                     
                     // Thanks info
-                    Text("settings_thanks")
-                        .font(.footnote)
-                        .foregroundColor(Color(UIColor.systemGray))
                     
+                    // Attributed text (link was not appropriate to Apple Guidlines
+                    /*
+                    AttributedTextView(getAttributedText())
+                        .padding(EdgeInsets(top: 0, leading: -4, bottom: 0, trailing: 0))
+                        .frame(height: UIDevice.current.userInterfaceIdiom == .phone ? 45 : 20)
+                    */
+                    
+                    Text("settings_thanks")
+                        .foregroundColor(Color(UIColor.systemGray))
+                        .font(.footnote)
                 }
                 
             }
             .navigationBarTitle("settings_title")
             .sheet(isPresented: $showShareSheet, content: {
-                let items = [NSLocalizedString("settings_share_text", comment: ""), URL(string: "https://www.apple.com")!]
+                let items = [NSLocalizedString("settings_share_text", comment: ""), URL(string: Constants.SHARE_LINK)!]
                 ShareSheet(activityItems: items)
             })
         }.navigationViewStyle(StackNavigationViewStyle())
@@ -188,6 +195,9 @@ struct SettingsView: View {
     }
     
     
+    /**
+        Tries to request permission, if succesful enable notifications, otherwise shows `accessDeniedAlert`
+     */
     func requestPermission() {
         let center = UNUserNotificationCenter.current()
         
@@ -207,6 +217,7 @@ struct SettingsView: View {
         
     }
     
+    // Alerts about reseting schedule
     func deleteAlert() -> Alert {
         return Alert(title: Text("dialog_title"),
               message: Text("settings_reset_dialog"),
@@ -218,6 +229,7 @@ struct SettingsView: View {
         )
     }
     
+    // Shows access-denied alert that says that user should turn on notifications in the settings
     func accessDeniedAlert() -> Alert {
         return Alert(title: Text("settings_notifications_permission_title"),
               message: Text("settings_notifications_permission_description"),
@@ -229,6 +241,14 @@ struct SettingsView: View {
             },
               secondaryButton: .default(Text("dialog_cancel_button"))
         )
+    }
+    
+    // Returns 'thanks text' with a link to fund.mipt
+    func getAttributedText() -> NSMutableAttributedString {
+        let string = NSLocalizedString("settings_thanks", comment: "")
+        let link_key = NSLocalizedString("settings_thanks_key", comment: "")
+        let attributedString = NSMutableAttributedString(string: string)
+        return attributedString.setAsLink(textToFind: link_key, linkURL: Constants.FUND_LINK)
     }
     
     // MARK: Storing data
@@ -262,29 +282,6 @@ struct SettingsView: View {
 }
 
 
-struct ShareSheet: UIViewControllerRepresentable {
-    typealias Callback = (_ activityType: UIActivity.ActivityType?, _ completed: Bool, _ returnedItems: [Any]?, _ error: Error?) -> Void
-    
-    let activityItems: [Any]
-    let applicationActivities: [UIActivity]? = nil
-    let excludedActivityTypes: [UIActivity.ActivityType]? = nil
-    let callback: Callback? = nil
-    
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(
-            activityItems: activityItems,
-            applicationActivities: applicationActivities)
-        controller.excludedActivityTypes = excludedActivityTypes
-        controller.completionWithItemsHandler = callback
-        return controller
-    }
-    
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
-        // nothing to do here
-    }
-}
-
-
 struct SettingsView_Previews: PreviewProvider {
     
     static let userInfo = UserInfo(groupNumber: "Б02-824")
@@ -294,6 +291,6 @@ struct SettingsView_Previews: PreviewProvider {
             .environmentObject(userInfo)
             .environmentObject((UIApplication.shared.delegate as! AppDelegate).schedule)
             .environment(\.locale, .init(identifier: "ru"))
-            .preferredColorScheme(.dark)
+            .preferredColorScheme(.light)
     }
 }

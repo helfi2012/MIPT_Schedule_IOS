@@ -6,6 +6,7 @@
   Copyright © 2020 Admin. All rights reserved.
 */
  
+"schedule" = "Расписание";
 // Days of week
 "Monday_Label" = "Понедельник";
 "Tuesday_Label" = "Вторник";
@@ -95,6 +96,7 @@
 "settings_about" = "Дополнительно";
 "settings_version" = "Версия";
 "settings_thanks" = "Разработчик благодарен Фонду Целевого Капитала МФТИ за поддержку проекта.";
+"settings_thanks_key" = "Фонду Целевого Капитала МФТИ";
 
 "settings_1minute" = "1 минуту";
 "settings_5minute" = "5 минут";
@@ -114,3 +116,7 @@
 
 "widget_display_name" = "Расписание";
 "widget_description" = "Показывает ближайшие занятия";
+
+// Notifications
+"notification_text_at" = "В";
+"notification_text_in" = "в";

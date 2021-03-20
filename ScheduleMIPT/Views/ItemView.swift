@@ -32,6 +32,11 @@ struct ItemView: View {
     var nextItem: ScheduleItem? = nil
     
     
+    // To update dot view
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    // Dot offset
+    @State private var offset: CGFloat = -0.5
+    
     /**
         - Returns color of the text depending on the theme and type
      */
@@ -76,6 +81,26 @@ struct ItemView: View {
         }
         return "ic_hotel"
     }
+    
+    /**
+        Check if `item` is current lesson (goes now)
+     */
+    private func isCurrent() -> Bool {
+        let currentTime = TimeUtils.getCurrentTime()
+        return (item.day == TimeUtils.getCurrentDay() &&
+                TimeUtils.timeDistance(t1: item.startTime, t2: currentTime) >= 0 &&
+                TimeUtils.timeDistance(t1: item.endTime, t2: currentTime) < 0)
+    }
+    
+    /**
+        Return relative dot offset (from -0.5 to 0.5) according to the time passed
+     */
+    private func getDotOffset() -> CGFloat {
+        let currentTime = TimeUtils.getCurrentTime()
+        let length = item.length
+        let passed = TimeUtils.timeDistance(t1: item.startTime, t2: currentTime)
+        return CGFloat(passed / length - 0.5)
+    }
 
     
     /**
@@ -90,10 +115,31 @@ struct ItemView: View {
                             .foregroundColor(textColor(type: item.type))
                             .font(.system(size: 13, weight: .heavy, design: .default))
                             .padding(EdgeInsets.init(top: 2, leading: 0, bottom: 0, trailing: 0))
-                        Rectangle()
-                            .fill(textColor(type: item.type))
-                            .frame(minWidth: 1, maxWidth: 1, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-                            .padding(EdgeInsets.init(top: -2, leading: 0, bottom: 0, trailing: 0))
+                        
+                        
+                        
+                        SingleAxisGeometryReader(axis: .vertical) { height in
+                            ZStack {
+                                if isCurrent() {
+                                    Circle()
+                                        .fill(textColor(type: item.type))
+                                        .frame(width: 7, height: 7)
+                                        .offset(x: 0, y: height * offset)
+                                        .onReceive(timer) { _ in
+                                            offset = getDotOffset()
+                                        }
+                                        .onAppear {
+                                            offset = getDotOffset()
+                                        }
+                                }
+                                
+                                Rectangle()
+                                    .fill(textColor(type: item.type))
+                                    .frame(minWidth: 1, maxWidth: 1, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+                                    .padding(EdgeInsets.init(top: -2, leading: 0, bottom: 0, trailing: 0))
+                            }
+                        }
+                        
                         Text(item.endTime)
                             .foregroundColor(textColor(type: item.type))
                             .font(.system(size: 13, weight: .heavy, design: .default))
@@ -111,17 +157,20 @@ struct ItemView: View {
                     
                     VStack(alignment: .leading) {
                         Text(item.name)
-                            .font(.subheadline)
+                            .font(.system(size: 15, weight: isCurrent() ? .medium : .regular, design: .default))
                             .foregroundColor(Color(UIColor.label))
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
+                        
                         Text(item.prof)
-                            .font(.subheadline)
+                            .font(.system(size: 15, weight: isCurrent() ? .medium : .regular, design: .default))
                             .foregroundColor(Color(UIColor.secondaryLabel))
                             .lineLimit(1)
+                        
                         Spacer()
+                        
                         Text(item.place)
-                            .font(.subheadline)
+                            .font(.system(size: 15, weight: isCurrent() ? .medium : .regular, design: .default))
                             .foregroundColor(Color(UIColor.label))
                             .lineLimit(1)
                     }.padding(8)
@@ -131,13 +180,14 @@ struct ItemView: View {
                 .frame(height: CGFloat(65 * min(2, max(1, item.length))))
                 .padding(EdgeInsets.init(top: 4, leading: 0, bottom: 4, trailing: 4))
                 
+                
                 if (showBreaks.value && nextItem != nil) {
                     let length = Int(TimeUtils.timeDistance(t1: item.endTime, t2: nextItem!.startTime) * 60)
                     
                     HStack {
                         Image(getBreakImage(length: length))
                             .frame(width: 25, height: 25)
-                            .foregroundColor(Color(UIColor.secondaryLabel)) //Color("BreakColor"))
+                            .foregroundColor(Color(UIColor.secondaryLabel))
                         
                         Text(getBreakText(length: length))
                             .font(.subheadline)
@@ -148,7 +198,11 @@ struct ItemView: View {
                     .padding(EdgeInsets.init(top: 0, leading: 8, bottom: 4, trailing: 8))
                 }
             }
-        }
+        }.listRowBackground(
+            Rectangle()
+                .fill(isCurrent() ? backgroundColor(type: item.type) : Color(UIColor.systemBackground))
+                .opacity(isCurrent() ? 0.3 : 1.0)
+        )
     }
 }
 

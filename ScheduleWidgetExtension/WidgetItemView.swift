@@ -55,6 +55,7 @@ struct WidgetItemView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(backgroundColor(type: item.type))
+                        .opacity(0.8)
                 )
                 .frame(width: 70)
                 .shadow(radius: 3)

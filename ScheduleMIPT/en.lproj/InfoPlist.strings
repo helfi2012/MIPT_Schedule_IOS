@@ -6,3 +6,4 @@
   Copyright © 2020 Admin. All rights reserved.
 */
 "CFBundleDisplayName" = "MIPT.Schedule";
+"CFBundleName" = "MIPT.Schedule";

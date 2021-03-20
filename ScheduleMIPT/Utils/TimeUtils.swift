@@ -42,11 +42,18 @@ class TimeUtils {
      */
     static func getCurrentDay() -> Int {
         let currentDay = Date().dayNumberOfWeek()! - 2
-        if (currentDay >= 0 && currentDay <= 6) {
+        if (currentDay >= 0 && currentDay <= 5) {
             return currentDay + 1
         } else {
             return 7
         }
+    }
+    
+    static func getCurrentTime() -> String {
+        let date = Date()
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: date)
     }
     
     static func getDayComponents(time: String, day: Int) -> DateComponents {

@@ -87,13 +87,17 @@ struct EditView: View {
                 
                 DatePicker(selection: $startTime, in: ...Date(), displayedComponents: .hourAndMinute) {
                     Text("start_time_text")
-                }
+                }.onChange(of: startTime, perform: { value in
+                    if (startTime.distance(to: endTime) < 0) {
+                        endTime = Calendar.current.date(byAdding: .minute, value: 1, to: startTime)!
+                    }
+                })
                 
                 DatePicker(selection: $endTime, in: ...Date(), displayedComponents: .hourAndMinute) {
                     Text("end_time_text")
                 }.onChange(of: endTime, perform: { value in
                     if (startTime.distance(to: endTime) < 0) {
-                        endTime = Calendar.current.date(byAdding: .minute, value: 1, to: startTime)!
+                        startTime = Calendar.current.date(byAdding: .minute, value: -1, to: endTime)!
                     }
                 })
             }

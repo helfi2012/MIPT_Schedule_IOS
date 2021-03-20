@@ -13,6 +13,18 @@ import WidgetKit
 struct SmallWidgetView: View {
     var entry: Provider.Entry
     
+    private func isCurrent() -> Bool {
+        if entry.lessons.isEmpty {
+            return false
+        }
+        let item = entry.lessons[0]
+        let currentTime = TimeUtils.getCurrentTime()
+        return (item.day == TimeUtils.getCurrentDay() &&
+                TimeUtils.timeDistance(t1: item.startTime, t2: currentTime) >= 0 &&
+                TimeUtils.timeDistance(t1: item.endTime, t2: currentTime) < 0)
+    }
+    
+    
     var body: some View {
         let lesson = entry.lessons.isEmpty ? nil : entry.lessons[0]
         ZStack {
@@ -26,10 +38,9 @@ struct SmallWidgetView: View {
                         .padding(8)
                 }
             } else {
-                VStack(spacing: 4) {
+                VStack(alignment: .center, spacing: 4) {
                     HStack {
-                        Text(StringUtils.getWeekLabels()[lesson!.day - 1].uppercased()
-                        )
+                        Text(StringUtils.getWeekLabels()[lesson!.day - 1].uppercased())
                             .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 0))
                             .foregroundColor(Color(UIColor.systemRed))
                             .font(.system(size: 11, weight: .medium, design: .default))
@@ -39,8 +50,11 @@ struct SmallWidgetView: View {
                     
                     Text(lesson!.startTime)
                         .font(.title)
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+                    
                     Text(lesson!.place)
                         .font(.title2)
+                    
                     Text(lesson!.name)
                         .multilineTextAlignment(.center)
                         .font(.footnote)

@@ -30,7 +30,13 @@ struct NewGroupView: View {
                 Spacer()
             }
             .navigationBarTitle(Text("newgroup_bartitle"), displayMode: .inline)
-            .navigationBarItems(trailing:
+            .navigationBarItems(leading:
+                Button(action: {
+                    showSheet = false
+                }) {
+                    Text("dialog_cancel_button").bold()
+                },
+                                trailing:
                 Button(action: {
                     groupNumber = text
                 }) {

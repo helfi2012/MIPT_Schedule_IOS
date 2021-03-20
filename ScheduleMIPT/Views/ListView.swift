@@ -9,14 +9,21 @@
 import SwiftUI
 
 
+/**
+    `EmptyView` shows Text with a message ("no lessons today")
+ */
 struct EmptyView: View {
     var body: some View {
         Text("no_lessons_text")
             .font(.subheadline).bold()
             .padding(8)
+            .listRowBackground(Color(UIColor.systemBackground))
     }
 }
 
+/**
+    `ImageView` shows centered Image with appropriate background and fixed maximum size
+ */
 struct ImageView: View {
     var body: some View {
         HStack {
@@ -26,7 +33,7 @@ struct ImageView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: 500, alignment: .center)
             Spacer()
-        }
+        }.listRowBackground(Color(UIColor.systemBackground))
     }
 }
 
@@ -65,13 +72,14 @@ struct ListView: View {
                                         nextItem: i < items.count - 1 ? items[i + 1] : nil
                                     )
                                     .environmentObject(self.schedule)
+                                    
                                 }
                             }
                         }
                     }
                 }
                 .listStyle(GroupedListStyle())
-                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarTitle("schedule", displayMode: .inline)
                 .navigationBarItems(leading:
                     NavigationLink(destination: SearchView().environmentObject(userInfo)) {
                         Text(userInfo.groupNumber)

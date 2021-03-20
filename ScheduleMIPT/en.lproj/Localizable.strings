@@ -6,6 +6,7 @@
   Copyright © 2020 Admin. All rights reserved.
 */
 
+"schedule" = "Schedule";
 // Days of week
 "Monday_Label" = "Monday";
 "Tuesday_Label" = "Tuesday";
@@ -94,7 +95,8 @@
 "settings_rate" = "Rate this app";
 "settings_about" = "ABOUT";
 "settings_version" = "Version";
-"settings_thanks" = "The developer is grateful to the Endowment Fund for supporting the project.";
+"settings_thanks" = "The developer is grateful to the MIPT Endowment Fund for supporting the project.";
+"settings_thanks_key" = "Endowment Fund";
 
 "settings_1minute" = "1 minute";
 "settings_5minute" = "5 minutes";
@@ -115,3 +117,7 @@
 
 "widget_display_name" = "Reminder";
 "widget_description" = "Shows upcoming classes";
+
+// Notifications
+"notification_text_at" = "At";
+"notification_text_in" = "in";

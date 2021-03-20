@@ -78,7 +78,7 @@ class ScheduleItem : NSObject, Codable, Identifiable {
         return TimeUtils.timeDistance(t1: startTime, t2: endTime)
     }
 
-    static let example = ScheduleItem(name: "Теоретическая механика", prof: "Маркеев В.", place: "526 ЛК", day: 1, type: "LEC", startTime: "13:25", endTime: "15:00", notes: "")
+    static let example = ScheduleItem(name: "Теоретическая механика", prof: "Маркеев В.", place: "526 ЛК", day: 4, type: "LEC", startTime: "9:00", endTime: "10:25", notes: "")
     
     static let example2 = ScheduleItem(name: "Ин.яз.", prof: "Шадрина О. В.", place: "427 НК", day: 1, type: "RST", startTime: "15:20", endTime: "16:55", notes: "")
     
