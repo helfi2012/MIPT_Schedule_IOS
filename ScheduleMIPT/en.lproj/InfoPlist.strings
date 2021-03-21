@@ -7,3 +7,4 @@
 */
 "CFBundleDisplayName" = "MIPT.Schedule";
 "CFBundleName" = "MIPT.Schedule";
+"NSCalendarsUsageDescription" = "App needs access to your calendar to export your working schedule";

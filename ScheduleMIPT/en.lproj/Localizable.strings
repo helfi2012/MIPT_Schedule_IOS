@@ -7,6 +7,7 @@
 */
 
 "schedule" = "Schedule";
+"MIPT" = "MIPT";
 // Days of week
 "Monday_Label" = "Monday";
 "Tuesday_Label" = "Tuesday";
@@ -78,6 +79,10 @@
 "settings_general" = "GENERAL";
 "settings_group" = "Group number";
 "settings_breaks" = "Show breaks";
+"settings_export_button" = "Export to the Apple Calendar";
+"settings_export_dialog" = "Are you sure you want to export your schedule to the Calendar App? We recommend to edit your classes before exporting them to the Calendar. A separate calendar will be created for the MIPT schedule.";
+"settings_export_permission_description" = "No access to the Calendar. Please grant access to the Calendar in the Settings.";
+"settings_upload_title" = "Uploading";
 "settings_reset_button" = "Reset schedule";
 "settings_reset_description" = "This action will delete all changes in the schedule. It cannot be undone.";
 "settings_reset_dialog" = "Are you sure you want to remove all changes?";

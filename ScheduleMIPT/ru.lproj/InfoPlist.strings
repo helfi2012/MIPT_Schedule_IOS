@@ -7,3 +7,4 @@
 */
 "CFBundleDisplayName" = "Расписание";
 "CFBundleName" = "Расписание";
+"NSCalendarsUsageDescription" = "Приложению необходим доступ к календарю, чтобы экспортировать расписание";

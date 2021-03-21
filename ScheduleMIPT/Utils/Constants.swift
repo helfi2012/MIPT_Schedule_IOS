@@ -20,9 +20,9 @@ class Constants {
     
     static let DEVELOPER_LINK: String = "https://vk.com/yasha_kayumov"
     
-    static let SHARE_LINK: String = "https://www.apple.com"
+    static let SHARE_LINK: String = "https://apps.apple.com/us/app/MIPT.Schedule/id1556396064"
     
-    static let RATE_LINK: String = "https://www.apple.com"
+    static let RATE_LINK: String = "https://apps.apple.com/us/app/MIPT.Schedule/id1556396064"
     
     static let FUND_LINK: String = "https://fund.mipt.ru"
 }

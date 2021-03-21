@@ -7,6 +7,7 @@
 */
  
 "schedule" = "Расписание";
+"MIPT" = "МФТИ";
 // Days of week
 "Monday_Label" = "Понедельник";
 "Tuesday_Label" = "Вторник";
@@ -78,13 +79,17 @@
 "settings_general" = "Основные";
 "settings_group" = "Номер группы";
 "settings_breaks" = "Показывать перерывы";
+"settings_export_button" = "Экспортировать в Календарь";
+"settings_export_dialog" = "Вы действительно хотите экспортировать расписание вашей группы в приложение Календарь? Рекомендуем отредактировать занятия прежде чем экспортировать их в Календарь. В приложении будет создан отдельный календарь для расписания МФТИ.";
+"settings_export_permission_description" = "Отсутствует доступ к Календарю. Пожалуйста, предоставьте доступ к Календарю в Настройках.";
+"settings_upload_title" = "Экспортируем";
 "settings_reset_button" = "Сбросить изменения";
 "settings_reset_description" = "Это действие приведет к удалению всех изменений, внесенных в расписание.";
 "settings_reset_dialog" = "Вы действительно хотите удалить все изменения?";
 "settings_notifications" = "Уведомления";
 "settings_notifications_enabled" = "Отправлять уведомления";
 "settings_notifications_permission_title" = "Отсутствует разрешение";
-"settings_notifications_permission_description" = "Разрешение на уведомления не было получено. Пожалуйста, разрешить приложению показывать уведомления в Настройках.";
+"settings_notifications_permission_description" = "Разрешение на уведомления не было получено. Пожалуйста, разрешите приложению показывать уведомления в Настройках.";
 "settings_notifications_permission_ok_button" = "Перейти в настройки";
 "settings_notifications_time" = "Предупреждать за ";
 "settings_notifications_description" = "Уведомления помогут вам не забывать про занятия.";
