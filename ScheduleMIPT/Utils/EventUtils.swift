@@ -9,12 +9,18 @@
 import EventKit
 import SwiftUI
 
+/**
+ This class contains methods responsible for exporting schedule to the Apple Calendar App
+ */
 class EventUtils {
     
     // End of the semester
-    private static let FINAL_DATE = "2021-06-01"
+    private static let FINAL_DATE = "2021-12-25"
     private static let DATE_FORMAT = "yyyy-MM-dd"
     
+    /**
+        Generates date by time (String "HH:MM") and weekday (1 - Monday, ..., 7 - Sunday)
+     */
     private static func generateDate(time: String, weekday: Int) -> Date {
         let split = time.split(separator: ":")
         let hour = Int(split[0])!
@@ -28,6 +34,9 @@ class EventUtils {
     }
     
     
+    /**
+        Chooses best Calendar source if possible
+     */
     static func bestPossibleEKSource(eventStore: EKEventStore) -> EKSource? {
         
         let defaultSource = eventStore.defaultCalendarForNewEvents?.source
@@ -38,6 +47,10 @@ class EventUtils {
     }
     
     
+    /**
+        Creates new calendar (called "MIPT") in the Apple Calendar app
+        - Returns EKCalendar if successful, nil otherwise
+     */
     static func createNewCalendar(eventStore: EKEventStore) -> EKCalendar? {
         let calendar = EKCalendar(for: .event, eventStore: eventStore)
         calendar.title = NSLocalizedString("MIPT", comment: "")
@@ -57,7 +70,9 @@ class EventUtils {
     
     
     /**
-     - Returns `true` if successul
+        Creates new calendar in the Apple Calendar App and export chosen lessons to this calendar, repeating until FINAL_DATE
+        - Parameter lesson - lessons to export
+        - Returns `true` if successul, `false` otherwise
      */
     static func exportToCalendar(lessons: Array<ScheduleItem>) -> Bool {
         let eventStore = EKEventStore()
@@ -76,7 +91,7 @@ class EventUtils {
             
             // Number of weeks before the end of the semester
             let weeks = Int(startDate.distance(to: finalDate) / (3600 * 24 * 7))
-            
+            guard weeks > 0 else { return false }
             for i in 0..<weeks {
                 // Initialize event
                 let event: EKEvent = EKEvent(eventStore: eventStore)

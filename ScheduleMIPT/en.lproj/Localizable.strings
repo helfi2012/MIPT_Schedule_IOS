@@ -60,14 +60,20 @@
 
 // Onboarding view
 "onboarding_title" = "MIPT.Schedule";
-"onboarding_search_title" = "Selecting a group";
-"onboarding_search_description" = "Choose any MIPT study group or create your own.";
-"onboarding_edit_title" = "Editing";
-"onboarding_edit_description" = "Customize your schedule by adding and editing classes.";
-"onboarding_notification_title" = "Notifications";
-"onboarding_notification_description" = "You can enable notifications in the settings. They will remind you about the upcoming classes in time.";
-"onboarding_widget_title" = "Widget";
-"onboarding_widget_description" = "Add a widget to the home screen to always have a schedule at hand.";
+
+"onboarding_subtitle1" = "Selecting a group";
+"onboarding_text1" = "Choose any MIPT study group or create your own.";
+"onboarding_subtitle2" = "Editing";
+"onboarding_text2" = "Customize your schedule by adding and editing classes.";
+"onboarding_subtitle3" = "Notifications";
+"onboarding_text3" = "You can enable notifications in the settings. They will remind you about the upcoming classes in time.";
+"onboarding_subtitle4" = "Widget";
+"onboarding_text4" = "Add a widget to the home screen to always have a schedule at hand.";
+
+"onboarding_warning_subtitle" = "Attention!";
+"onboarding_warning_text" = "By May 2022, support of this application will be completed. Instead, it is proposed to use the official MIPT application.";
+
+"onboarding_download_button" = "Download MIPT Application";
 "onboarding_button" = "Continue";
 
 // Tab View

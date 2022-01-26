@@ -18,9 +18,7 @@ struct SettingsView: View {
     
     @EnvironmentObject var schedule: Schedule
     
-    @ObservedObject var observableShowBreaks: ObservableBool
-    
-    @State var showBreaks: Bool = UserDefaults.standard.bool(forKey: SettingsView.BREAKS_KEY)
+    @AppStorage(SettingsView.BREAKS_KEY) var showBreaks: Bool = true
     
     @State var notificationsEnabled: Bool = UserDefaults.standard.bool(forKey: SettingsView.NOTIFICATIONS_KEY)
     
@@ -29,7 +27,6 @@ struct SettingsView: View {
     // List of notification options
     var notifyOptions = StringUtils.getMinutesLabels()
     
-    // Responsible for toggling alert window
     @State private var showNotificationsAccessDeniedAlert = false
     
     @State private var showDeleteAlert = false
@@ -46,168 +43,155 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            NavigationView {
+            Form {
+                Section(header: Text("settings_general")) {
+                    // Group number picker
+                    HStack {
+                        NavigationLink(destination: SearchView().environmentObject(userInfo)) {
+                            HStack {
+                                Text("settings_group")
+                                Spacer()
+                                Text(userInfo.groupNumber)
+                                    .foregroundColor(Color(UIColor.systemGray))
+                            }
+                        }
+                    }
+                    
+                    // Break toggle
+                    HStack {
+                        Toggle(isOn: $showBreaks) {
+                            Text("settings_breaks")
+                        }
+                    }
+                }
                 
-                Form {
-                    
-                    Section(header: Text("settings_general")) {
-                        // Group number picker
-                        HStack {
-                            NavigationLink(destination: SearchView().environmentObject(userInfo)) {
-                                HStack {
-                                    Text("settings_group")
-                                    Spacer()
-                                    Text(userInfo.groupNumber)
-                                        .foregroundColor(Color(UIColor.systemGray))
-                                }
-                            }
+                Section() {
+                    // Import button
+                    HStack {
+                        // Button itself
+                        Button(action: {
+                            showExportAlert.toggle()
+                        }) {
+                            Text("settings_export_button")
+                                .foregroundColor(Color.blue)
+                        }.alert(isPresented: $showExportAlert) {
+                            exportAlert()
                         }
                         
-                        // Break toggle
-                        HStack {
-                            Toggle(isOn: $showBreaks) {
-                                Text("settings_breaks")
-                            }.onChange(of: showBreaks) { value in
-                                
-                                observableShowBreaks.value = value
-                                
-                                UserDefaults.standard.set(value, forKey: SettingsView.BREAKS_KEY)
+                        // Empty view just to hold .alert action
+                        Text("")
+                            .alert(isPresented: $showCalendarAccessDeniedAlert) {
+                                calendarAccessDeniedAlert()
                             }
-                        }
                     }
                     
-                    Section() {
-                        // Import button
-                        HStack {
-                            Button(action: {
-                                showExportAlert.toggle()
-                            }) {
-                                Text("settings_export_button")
-                                    .foregroundColor(Color.blue)
-                            }.alert(isPresented: $showExportAlert) {
-                                exportAlert()
-                            }
-                            
-                            Text("")
-                                .alert(isPresented: $showCalendarAccessDeniedAlert) {
-                                    calendarAccessDeniedAlert()
-                                }
+                    // Reset button
+                    Button(action: {
+                        self.showDeleteAlert = true
+                    }) {
+                        Text("settings_reset_button")
+                            .foregroundColor(Color.red)
+                    }.alert(isPresented: $showDeleteAlert) {
+                        deleteAlert()
+                    }
+                    
+                    // Reset text
+                    Text("settings_reset_description")
+                        .font(.footnote)
+                        .foregroundColor(Color(UIColor.systemGray))
+                    
+                }
+                
+                Section(header: Text("settings_notifications")) {
+                    
+                    // Notification toggle
+                    Toggle(isOn: $notificationsEnabled) {
+                        Text("settings_notifications_enabled")
+                    }.onChange(of: notificationsEnabled) { value in
+                        UserDefaults.standard.set(value, forKey: SettingsView.NOTIFICATIONS_KEY)
+                        if value {
+                            requestNotificationPermission()
+                        } else {
+                            NotificationUtils.cancelNotifications()
                         }
-                        
-                        // Reset button
-                        Button(action: {
-                            self.showDeleteAlert = true
-                        }) {
-                            Text("settings_reset_button")
-                                .foregroundColor(Color.red)
-                        }.alert(isPresented: $showDeleteAlert) {
-                            deleteAlert()
+                    }.alert(isPresented: $showNotificationsAccessDeniedAlert) {
+                        notificationsAccessDeniedAlert()
+                    }
+                    
+                    // Minutes picker
+                    Picker(selection: $notifyOption, label: Text("settings_notifications_time")) {
+                        ForEach(0 ..< notifyOptions.count) {
+                            Text(self.notifyOptions[$0])
                         }
+                    }
+                    .onChange(of: notifyOption) { value in
+                        // Update preferences
+                        UserDefaults.standard.set(value, forKey: SettingsView.NOTIFY_MINUTES_KEY)
                         
-                        // Reset text
-                        Text("settings_reset_description")
-                            .font(.footnote)
+                        // Update notifications
+                        NotificationUtils.scheduleNotifications(key: userInfo.groupNumber, schedule: schedule)
+                    }.disabled(notificationsEnabled == false)
+                    
+                    
+                    Text("settings_notifications_description")
+                        .font(.footnote)
+                        .foregroundColor(Color(UIColor.systemGray))
+                }
+                
+                Section(header: Text("settings_communication")) {
+                    
+                    // Share button
+                    Button(action: {
+                        showShareSheet = true
+                    }) {
+                        Text("settings_share")
+                    }
+                    
+                    // Write to developer button
+                    Button(action: {
+                        if let url = URL(string: Constants.DEVELOPER_LINK) {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        Text("settings_developer")
+                    }
+                    
+                    // Rate button
+                    Button(action: {
+                        if let url = URL(string: Constants.RATE_LINK) {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        Text("settings_rate")
+                    }
+                }
+                
+                // About section
+                Section(header: Text("settings_about")) {
+                    let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+                    
+                    // Version info
+                    HStack {
+                        Text("settings_version")
+                        Spacer()
+                        Text(version)
                             .foregroundColor(Color(UIColor.systemGray))
-                        
                     }
                     
-                    Section(header: Text("settings_notifications")) {
-                        
-                        // Notification toggle
-                        Toggle(isOn: $notificationsEnabled) {
-                            Text("settings_notifications_enabled")
-                        }.onChange(of: notificationsEnabled) { value in
-                            UserDefaults.standard.set(value, forKey: SettingsView.NOTIFICATIONS_KEY)
-                            if value {
-                                requestNotificationPermission()
-                            } else {
-                                NotificationUtils.cancelNotifications()
-                            }
-                        }.alert(isPresented: $showNotificationsAccessDeniedAlert) {
-                            notificationsAccessDeniedAlert()
-                        }
-                        
-                        // Minutes picker
-                        Picker(selection: $notifyOption, label: Text("settings_notifications_time")) {
-                            ForEach(0 ..< notifyOptions.count) {
-                                Text(self.notifyOptions[$0])
-                            }
-                        }
-                        .onChange(of: notifyOption) { value in
-                            // Update preferences
-                            UserDefaults.standard.set(value, forKey: SettingsView.NOTIFY_MINUTES_KEY)
-                            
-                            // Update notifications
-                            NotificationUtils.scheduleNotifications(key: userInfo.groupNumber, schedule: schedule)
-                        }.disabled(notificationsEnabled == false)
-                        
-                        
-                        Text("settings_notifications_description")
-                            .font(.footnote)
-                            .foregroundColor(Color(UIColor.systemGray))
-                    }
+                    // Thanks info
                     
-                    Section(header: Text("settings_communication")) {
-                        
-                        // Share button
-                        Button(action: {
-                            showShareSheet = true
-                        }) {
-                            Text("settings_share")
-                        }
-                        
-                        // Write to developer button
-                        Button(action: {
-                            if let url = URL(string: Constants.DEVELOPER_LINK) {
-                                UIApplication.shared.open(url)
-                            }
-                        }) {
-                            Text("settings_developer")
-                        }
-                        
-                        // Rate button
-                        Button(action: {
-                            if let url = URL(string: Constants.RATE_LINK) {
-                                UIApplication.shared.open(url)
-                            }
-                        }) {
-                            Text("settings_rate")
-                        }
-                    }
-                    
-                    // About section
-                    Section(header: Text("settings_about")) {
-                        let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-                        
-                        // Version info
-                        HStack {
-                            Text("settings_version")
-                            Spacer()
-                            Text(version)
-                                .foregroundColor(Color(UIColor.systemGray))
-                        }
-                        
-                        // Thanks info
-                        
-                        // Attributed text (link was not appropriate to Apple Guidlines
-                        /*
-                        AttributedTextView(getAttributedText())
-                            .padding(EdgeInsets(top: 0, leading: -4, bottom: 0, trailing: 0))
-                            .frame(height: UIDevice.current.userInterfaceIdiom == .phone ? 45 : 20)
-                        */
-                        
-                        Text("settings_thanks")
-                            .foregroundColor(Color(UIColor.systemGray))
-                            .font(.footnote)
-                    }
-                    
-                }.navigationBarTitle("settings_title")
-                .sheet(isPresented: $showShareSheet, content: {
-                    let items = [NSLocalizedString("settings_share_text", comment: ""), URL(string: Constants.SHARE_LINK)!]
-                    ShareSheet(activityItems: items)
-                })
-            }.navigationViewStyle(StackNavigationViewStyle())
-            .padding(UIDevice.current.userInterfaceIdiom == .pad ? 16 : 0)
+                    Text("settings_thanks")
+                        .foregroundColor(Color(UIColor.systemGray))
+                        .font(.footnote)
+                }
+                
+            }
+            .navigationBarTitle("settings_title", displayMode: .inline)
+            .sheet(isPresented: $showShareSheet, content: {
+                let items = [NSLocalizedString("settings_share_text", comment: ""), URL(string: Constants.SHARE_LINK)!]
+                ShareSheet(activityItems: items)
+                    .ignoresSafeArea(.all, edges: .bottom)
+            })
             .background(Color(UIColor.systemGroupedBackground))
             .blur(radius: showProgress ? 5.0 : 0.0)
             
@@ -284,11 +268,11 @@ struct SettingsView: View {
     func deleteAlert() -> Alert {
         return Alert(title: Text("dialog_title"),
               message: Text("settings_reset_dialog"),
-              primaryButton: .default(Text("dialog_ok_button")) {
+              primaryButton: .default(Text("dialog_cancel_button")),
+              secondaryButton: .default(Text("dialog_ok_button")) {
                 self.resetSchedule()
                 self.mode.wrappedValue.dismiss()
-            },
-              secondaryButton: .default(Text("dialog_cancel_button"))
+            }
         )
     }
     
@@ -297,11 +281,11 @@ struct SettingsView: View {
     func exportAlert() -> Alert {
         return Alert(title: Text("dialog_title"),
               message: Text("settings_export_dialog"),
-              primaryButton: .default(Text("dialog_ok_button")) {
+              primaryButton: .default(Text("dialog_cancel_button")),
+              secondaryButton: .default(Text("dialog_ok_button")) {
                 self.requestCalendarPermission()
-                self.mode.wrappedValue.dismiss()
-            },
-              secondaryButton: .default(Text("dialog_cancel_button"))
+                //self.mode.wrappedValue.dismiss()
+            }
         )
     }
     
@@ -310,13 +294,13 @@ struct SettingsView: View {
     func notificationsAccessDeniedAlert() -> Alert {
         return Alert(title: Text("settings_notifications_permission_title"),
               message: Text("settings_notifications_permission_description"),
-              primaryButton: .default(Text("settings_notifications_permission_ok_button")) {
+              primaryButton: .default(Text("dialog_cancel_button")) ,
+              secondaryButton: .default(Text("settings_notifications_permission_ok_button")) {
                 if let appSettings = NSURL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(appSettings as URL)
                 }
                 self.mode.wrappedValue.dismiss()
-            },
-              secondaryButton: .default(Text("dialog_cancel_button"))
+            }
         )
     }
     
@@ -324,22 +308,14 @@ struct SettingsView: View {
     func calendarAccessDeniedAlert() -> Alert {
         return Alert(title: Text("settings_notifications_permission_title"),
               message: Text("settings_export_permission_description"),
-              primaryButton: .default(Text("settings_notifications_permission_ok_button")) {
+              primaryButton: .default(Text("dialog_cancel_button")) ,
+              secondaryButton: .default(Text("settings_notifications_permission_ok_button")) {
                 if let appSettings = NSURL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(appSettings as URL)
                 }
                 self.mode.wrappedValue.dismiss()
-            },
-              secondaryButton: .default(Text("dialog_cancel_button"))
+            }
         )
-    }
-    
-    // Returns 'thanks text' with a link to fund.mipt
-    func getAttributedText() -> NSMutableAttributedString {
-        let string = NSLocalizedString("settings_thanks", comment: "")
-        let link_key = NSLocalizedString("settings_thanks_key", comment: "")
-        let attributedString = NSMutableAttributedString(string: string)
-        return attributedString.setAsLink(textToFind: link_key, linkURL: Constants.FUND_LINK)
     }
     
     // MARK: Working with data
@@ -386,7 +362,7 @@ struct SettingsView_Previews: PreviewProvider {
     static let userInfo = UserInfo(groupNumber: "Б02-824")
     
     static var previews: some View {
-        SettingsView(observableShowBreaks: ObservableBool(value: false))
+        SettingsView()
             .environmentObject(userInfo)
             .environmentObject((UIApplication.shared.delegate as! AppDelegate).schedule)
             .environment(\.locale, .init(identifier: "ru"))

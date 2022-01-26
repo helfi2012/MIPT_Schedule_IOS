@@ -35,8 +35,8 @@ class DataUtils {
         Saving main key (user's group name) to preferences
      */
     static func modifyGroupNumber(key: String) {
-        // UserDefaults.standard.set(key, forKey: MAIN_KEY)
-        return UserDefaults(suiteName: Constants.SUITE_NAME)!.set(key, forKey: MAIN_KEY)
+        //UserDefaults.standard.set(key, forKey: MAIN_KEY)
+        UserDefaults(suiteName: Constants.SUITE_NAME)!.set(key, forKey: MAIN_KEY)
     }
     
     

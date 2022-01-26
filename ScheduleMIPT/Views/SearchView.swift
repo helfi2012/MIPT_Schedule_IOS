@@ -164,7 +164,7 @@ struct SearchView: View {
     }
     
     private func getFilteredGroups() -> [String] {
-        return getAllGroups().filter { search(needle: query, haystack: $0) }
+        return getAllGroups().filter { search(needle: query.lowercased(), haystack: $0.lowercased()) }
     }
     
     private static let MAX_RECENT_COUNT: Int = 3

@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Fuzzy",
+        "repositoryURL": "https://github.com/khoi/fuzzy-swift",
+        "state": {
+          "branch": null,
+          "revision": "48d0ddb4c226e8a28a8f905fa0549ee6f90954fc",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "SmartText",
+        "repositoryURL": "https://github.com/helfi2012/SmartText",
+        "state": {
+          "branch": null,
+          "revision": "d6dc7508f51801738222ba49d80fbc17b5370a98",
+          "version": "1.0.7"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

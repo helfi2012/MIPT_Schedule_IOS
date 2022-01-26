@@ -21,7 +21,9 @@ class Schedule : Codable, ObservableObject {
             return nil
         }
         var menu = [MenuSection]()
-        let items = timetable[groupNumber]!
+        guard let items = timetable[groupNumber] else {
+            return nil
+        }
         let titles = StringUtils.getWeekLabels()
         for title in titles {
             menu.append(MenuSection(name: title))

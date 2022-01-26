@@ -35,7 +35,7 @@ struct EditView: View {
     @State private var profText: String = ""
     
     @State private var selectedType: String = "SEM"
-    @State private var selectedDayIndex: Int = 0
+    @State private var selectedDayIndex: Int = -1
     
     @State private var startTime = Date()
     @State private var endTime = Date().addingTimeInterval(TimeInterval(3600))
@@ -43,8 +43,6 @@ struct EditView: View {
     @State private var notesText: String = ""
     
     @State private var showingAlert = false
-    
-    @State private var pickerVisible = false
     
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
@@ -59,30 +57,11 @@ struct EditView: View {
             
             // Time & date section
             Section(header: Text("date_time_header")) {
-            
-                HStack {
-                    Text("day_text")
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        self.pickerVisible.toggle()
-                    }) {
-                        Text(self.weekLabels[selectedDayIndex])
-                            .foregroundColor(Color(UIColor.systemGray))
+                
+                Picker("day_text", selection: $selectedDayIndex) {
+                    ForEach(0..<weekLabels.count, id: \.self) { i in
+                        Text(self.weekLabels[i])
                     }
-                }
-                if pickerVisible {
-                    Picker("day_text", selection: $selectedDayIndex) {
-                        ForEach(0..<weekLabels.count, id: \.self) { i in
-                            Text(self.weekLabels[i])
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(maxHeight: 150)
-                    .onTapGesture(perform: {
-                        self.pickerVisible.toggle()
-                    })
                 }
                 
                 DatePicker(selection: $startTime, in: ...Date(), displayedComponents: .hourAndMinute) {
@@ -112,7 +91,6 @@ struct EditView: View {
                 }
                 
                 TextField("notes_text", text: $notesText)
-                
             }
             
             // Delete section
@@ -130,32 +108,37 @@ struct EditView: View {
                 self.bindInitialData()
             }
         }
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text("dialog_title"),
-                  message: Text("dialog_message"),
-                  primaryButton: .default(Text("dialog_ok_button")) {
-                    self.deleteItem()
-                    self.mode.wrappedValue.dismiss()
-                },
-                  secondaryButton: .default(Text("dialog_cancel_button"))
-            )
-        }
-            
+        .alert(isPresented: $showingAlert) { self.deleteAlert }
         .navigationBarTitle(isCreatingMode ? "creating_text" : "editing_text")
-        .navigationBarItems(trailing:
-            HStack(alignment: .center, spacing: 16) {
-                Button(action: {
-                    if (self.isCreatingMode) {
-                        self.saveNewData()
-                    } else {
-                        self.overwriteData()
-                    }
-                    self.mode.wrappedValue.dismiss()
-                }) {
-                    Text("save_button_text")
-                }.disabled(lessonText.isEmpty)
-            })
+        .navigationBarItems(trailing: self.navigationBarButton)
 
+    }
+    
+    var navigationBarButton: some View {
+        HStack(alignment: .center, spacing: 16) {
+            Button(action: {
+                if (self.isCreatingMode) {
+                    self.saveNewData()
+                } else {
+                    self.overwriteData()
+                }
+                self.mode.wrappedValue.dismiss()
+            }) {
+                Text("save_button_text")
+            }
+            .disabled(lessonText.isEmpty)
+        }
+    }
+    
+    var deleteAlert: Alert {
+        Alert(title: Text("dialog_title"),
+              message: Text("dialog_message"),
+              primaryButton: .default(Text("dialog_cancel_button")) ,
+              secondaryButton: .default(Text("dialog_ok_button")) {
+                self.deleteItem()
+                self.mode.wrappedValue.dismiss()
+            }
+        )
     }
     
     // MARK: Data work
@@ -167,13 +150,12 @@ struct EditView: View {
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         
-        self.startTime = dateFormatter.date(from: "10:45")!
-        self.endTime = dateFormatter.date(from: "12:10")!
+        self.startTime = dateFormatter.date(from: "10:45") ?? Date()
+        self.endTime = dateFormatter.date(from: "12:10") ?? Date()
         
-//        if self.selectedDayIndex == -1 {
-//            self.selectedDayIndex = 0
-//        }
-        self.selectedDayIndex = 0
+        if self.selectedDayIndex == -1 {
+            self.selectedDayIndex = 0
+        }
     }
     /**
         Loading initial information to the views from ItemView (Editing mode)
@@ -186,12 +168,11 @@ struct EditView: View {
         self.profText = self.item.prof
         self.notesText = self.item.notes
         self.selectedType = self.item.type
-//        if self.selectedDayIndex == -1 {
-//            self.selectedDayIndex = self.item.day - 1
-//        }
-        self.selectedDayIndex = self.item.day - 1
-        self.startTime = dateFormatter.date(from: self.item.startTime)!
-        self.endTime = dateFormatter.date(from: self.item.endTime)!
+        if self.selectedDayIndex == -1 {
+            self.selectedDayIndex = self.item.day - 1
+        }
+        self.startTime = dateFormatter.date(from: self.item.startTime) ?? Date()
+        self.endTime = dateFormatter.date(from: self.item.endTime) ?? Date()
     }
     
     /**
@@ -200,8 +181,9 @@ struct EditView: View {
     private func deleteItem() {
         let app = UIApplication.shared.delegate as! AppDelegate
         let schedule = app.schedule!
-        var lessons = schedule.timetable[groupNumber]!
-        lessons.remove(at: lessons.firstIndex(of: item)!)
+        guard var lessons = schedule.timetable[groupNumber] else { return }
+        guard let pos = lessons.firstIndex(of: item) else { return }
+        lessons.remove(at: pos)
         schedule.timetable[groupNumber] = lessons
         app.updateTimeTable(updatedSchedule: schedule)
     }
@@ -246,8 +228,8 @@ struct EditView: View {
      */
     private func overwriteData() {
         let newItem = self.newItem()
-        var lessons = schedule.timetable[groupNumber]!
-        let pos = lessons.firstIndex(of: item)!
+        guard var lessons = schedule.timetable[groupNumber] else { return }
+        guard let pos = lessons.firstIndex(of: item) else { return }
         lessons[pos] = newItem
         lessons.sort(by: {
             if ($0.day != $1.day) {

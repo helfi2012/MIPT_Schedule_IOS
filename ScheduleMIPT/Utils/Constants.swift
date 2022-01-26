@@ -25,4 +25,6 @@ class Constants {
     static let RATE_LINK: String = "https://apps.apple.com/us/app/MIPT.Schedule/id1556396064"
     
     static let FUND_LINK: String = "https://fund.mipt.ru"
+    
+    static let MIPT_APP_LINK: String = "https://apps.apple.com/us/app/%D1%84%D0%B8%D0%B7%D1%82%D0%B5%D1%85/id1580960177"
 }

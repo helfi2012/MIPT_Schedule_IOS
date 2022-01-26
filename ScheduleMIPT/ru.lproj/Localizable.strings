@@ -60,14 +60,20 @@
 
 // Onboarding view
 "onboarding_title" = "Физтех.Расписание";
-"onboarding_search_title" = "Выбор группы";
-"onboarding_search_description" = "Выбери любую учебную группу МФТИ или создай свою.";
-"onboarding_edit_title" = "Редактирование";
-"onboarding_edit_description" = "Настрой расписание под себя, добавляя и редактируя занятия.";
-"onboarding_notification_title" = "Уведомления";
-"onboarding_notification_description" = "В настройках можно включить уведомления. Они вовремя напомнят о предстоящих занятиях.";
-"onboarding_widget_title" = "Виджет";
-"onboarding_widget_description" = "Добавь виджет на главный экран, чтобы всегда иметь расписание под рукой.";
+
+"onboarding_subtitle1" = "Выбор группы";
+"onboarding_text1" = "Выбери любую учебную группу МФТИ или создай свою.";
+"onboarding_subtitle2" = "Редактирование";
+"onboarding_text2" = "Настрой расписание под себя, добавляя и редактируя занятия.";
+"onboarding_subtitle3" = "Уведомления";
+"onboarding_text3" = "В настройках можно включить уведомления. Они вовремя напомнят о предстоящих занятиях.";
+"onboarding_subtitle4" = "Виджет";
+"onboarding_text4" = "Добавь виджет на главный экран, чтобы всегда иметь расписание под рукой.";
+
+"onboarding_warning_subtitle" = "Важно!";
+"onboarding_warning_text" = "К маю 2022 года поддержка этого приложения будет завершена. Вместо него предлагается использовать официальное приложение MIPT.";
+
+"onboarding_download_button" = "Скачать приложение MIPT";
 "onboarding_button" = "Продолжить";
 
 // Tab View

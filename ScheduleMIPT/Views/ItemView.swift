@@ -26,10 +26,10 @@ struct ItemView: View {
     // item holds information about the lesson
     var item: ScheduleItem
     
-    @ObservedObject var showBreaks: ObservableBool
-    
     // If not nil nextItem holds information about next lesson; nil means no next lesson
     var nextItem: ScheduleItem? = nil
+    
+    @AppStorage(SettingsView.BREAKS_KEY) var showBreaks: Bool = true
     
     
     // To update dot view
@@ -181,7 +181,7 @@ struct ItemView: View {
                 .padding(EdgeInsets.init(top: 4, leading: 0, bottom: 4, trailing: 4))
                 
                 
-                if (showBreaks.value && nextItem != nil) {
+                if (showBreaks && nextItem != nil) {
                     let length = Int(TimeUtils.timeDistance(t1: item.endTime, t2: nextItem!.startTime) * 60)
                     
                     HStack {
@@ -210,10 +210,8 @@ struct ItemView_Previews: PreviewProvider {
     static var previews: some View {
         ItemView(groupNumber: "Б02-824",
                  item: ScheduleItem.example,
-                 showBreaks: ObservableBool(value: true),
                  nextItem: ScheduleItem.example2)
             .environmentObject((UIApplication.shared.delegate as! AppDelegate).schedule)
-            .environmentObject(ObservableBool(value: true))
 //            .environment(\.locale, .init(identifier: "ru"))
             .preferredColorScheme(.light)
     }

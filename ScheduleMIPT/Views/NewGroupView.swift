@@ -27,6 +27,7 @@ struct NewGroupView: View {
                         .font(.footnote)
                         .foregroundColor(Color(UIColor.secondaryLabel))
                 }
+                
                 Spacer()
             }
             .navigationBarTitle(Text("newgroup_bartitle"), displayMode: .inline)
@@ -43,7 +44,9 @@ struct NewGroupView: View {
                     Text("newgroup_button").bold()
                 }.disabled(text.isEmpty)
             )
+            .ignoresSafeArea(.all, edges: .bottom)
         }
+        
     }
 }
 
